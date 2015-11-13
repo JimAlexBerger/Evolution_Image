@@ -89,6 +89,7 @@
             // 
             // Graph_Imagebox
             // 
+            this.Graph_Imagebox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.Graph_Imagebox.Location = new System.Drawing.Point(27, 159);
             this.Graph_Imagebox.Name = "Graph_Imagebox";
             this.Graph_Imagebox.Size = new System.Drawing.Size(176, 134);

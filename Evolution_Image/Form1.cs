@@ -26,41 +26,40 @@ namespace Evolution_Image
 
         private void button1_Click(object sender, EventArgs e)
         {
+            //initialize source image
             Source_Image_Path.ShowDialog();
-
             Bitmap source_Image = (Bitmap)Image.FromFile(Source_Image_Path.FileName);
-
             Source_Imagebox.BackgroundImage = source_Image;
 
-            Bitmap evo_Image = new Bitmap(source_Image.Width, source_Image.Height);
+            //initialize Population            
+            int numGenes = 20;
+            int popSize = 5;
+            Individ[] population = new Individ[popSize];
 
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < popSize; i++)
             {
-                Triangle triangle = new Triangle(evo_Image);
+                population[i] = new Individ(source_Image, numGenes);
+            }
 
-                triangle.pos[1] = new Point(12, 12);
-                triangle.r = 0;
-                triangle.g = 170;
-                triangle.b = 0;
-                triangle.a = 0;
-
-                using (Graphics g = Graphics.FromImage(evo_Image))
+            //test testing of Population
+            Graph populationGraph = new Graph(population);
+            while (populationGraph.history[249] > 9000000)
+            {
+                for (int i = 0; i < popSize; i++)
                 {
-                    SolidBrush drawing_Evo_Brush = new SolidBrush(triangle.color);
-                    g.FillPolygon(drawing_Evo_Brush, triangle.pos);
-                    //g.FillRectangle(drawing_Evo_Brush, 5, i, 5, 1);
+                    population[i] = new Individ(source_Image, numGenes);
                 }
-                //Thread.Sleep(10);
-                Evo_Imagebox.BackgroundImage = evo_Image;
-                
+                populationGraph.CurrPopulation = population;
+                Evo_Imagebox.BackgroundImage = population[populationGraph.currMaxIndex].evoImage;
+                Genes_Textbox.Text += ("Likeness: " + likeness(source_Image, population[populationGraph.currMaxIndex].evoImage) + Environment.NewLine);
             }
-            for (int v = 0; v < 1; v++)
-            {
-                Genes_Textbox.Text += ("Likeness: " + likeness(source_Image, evo_Image) + Environment.NewLine);
-            }
+            Evo_Imagebox.BackgroundImage = population[populationGraph.currMaxIndex].evoImage;
+            Genes_Textbox.Text += ("Likeness Final: " + likeness(source_Image, population[populationGraph.currMaxIndex].evoImage) + Environment.NewLine);
+
+
         }
 
-        public int likeness(Bitmap source, Bitmap compare)
+        public static int likeness(Bitmap source, Bitmap compare)
         {
             if ((source.Height == compare.Height) && (source.Width == compare.Width))
             {
@@ -81,27 +80,107 @@ namespace Evolution_Image
                 return fitness;
             }
             else return 0;
-        }
+        }        
 
-        public double likeness_percent(Bitmap source, Bitmap compare)
+        public class Graph
         {
-            int like = likeness(source, compare);
+            public Bitmap graph { get; set; }
 
-            int worst = 0;
+            public int[] history { get; set; }
 
-            for (int x = 0; x < source.Width; x++)
-            {
-                for (int y = 0; y < source.Height; y++)
+            public Individ[] currPopulation;
+            public Individ[] CurrPopulation
+            {                
+                set
                 {
-                    worst += 3 * 255;
+                    //Find best fitness of the population
+                    int bestFitness = 0;
+                    int bestIndex = 0;
 
+                    for (int i = 0; i < value.Length; i++)
+                    {
+                        if ((value[i].fitness < bestFitness) || (i == 0))
+                        {
+                            bestFitness = value[i].fitness;
+                            bestIndex = i;
+                        }
+                    }
+                    //append best fitness to the history array
+                    for (int i = 0; i < 249; i++)
+                    {
+                        int tempIndex = 249 - i;
+                        history[tempIndex - 1] = history[tempIndex];
+                    }
+                    history[249] = bestFitness;
+
+                    //graph the history array
+                    Bitmap temp = new Bitmap(this.graph);
+                    Point[] graphPoints = new Point[252];
+                    graphPoints[250] = new Point(this.graph.Width, this.graph.Height);
+                    graphPoints[251] = new Point(0, this.graph.Height);
+
+                    for (int i = 0; i < 250; i++)
+                    {
+                        graphPoints[i] = new Point((45 * history[i]) / (history[0] + 1000), i);
+                        using (Graphics g = Graphics.FromImage(temp))
+                        {
+                            SolidBrush drawing_Evo_Brush = new SolidBrush(Color.Red);
+                            g.FillPolygon(drawing_Evo_Brush, graphPoints);
+                        }
+                    }
+                    this.graph = temp;
+                    this.currPopulation = value;
+                    this.currMaxIndex = bestIndex;
                 }
-
             }
 
-            double fitness_Percent = 100 - ((like + 0.0) / (worst + 0.0));
-            return fitness_Percent;
+            public int currMaxIndex { get; set; }
 
+            public Graph(Individ[] population)
+            {
+                //Initialize the history array
+                this.history = new int[250];
+                //Initialize graph bitmap
+                this.graph = new Bitmap(250, 45);
+                //Find best fitness of the population
+                int bestFitness = 0;
+                int bestIndex = 0;
+
+                for (int i = 0; i < population.Length; i++)
+                {
+                    if ((population[i].fitness < bestFitness) || (i == 0))
+                    {
+                        bestFitness = population[i].fitness;
+                        bestIndex = i;
+                    }
+                }
+                //append best fitness to the history array
+                for(int i = 0; i < 249; i++)
+                {
+                    int tempIndex = 249 - i;
+                    history[tempIndex - 1] = history[tempIndex];
+                }
+                history[249] = bestFitness;
+
+                //graph the history array
+                Bitmap temp = new Bitmap(this.graph);
+                Point[] graphPoints = new Point[252];
+                graphPoints[250] = new Point(this.graph.Width, this.graph.Height);
+                graphPoints[251] = new Point(0, this.graph.Height);
+
+                for (int i = 0; i < 250; i++)
+                {
+                    graphPoints[i] = new Point((45*history[i])/(history[0]+1000),i);
+                    using (Graphics g = Graphics.FromImage(temp))
+                    {
+                        SolidBrush drawing_Evo_Brush = new SolidBrush(Color.Red);
+                        g.FillPolygon(drawing_Evo_Brush, graphPoints);
+                    }
+                }
+                this.graph = temp;
+                this.currPopulation = population;
+                this.currMaxIndex = bestIndex;
+            }
         }
 
         public class Triangle
@@ -114,7 +193,7 @@ namespace Evolution_Image
                 get { return r; }
                 set
                 {
-                    this.r = R;
+                    this.r = value;
                     this.color = Color.FromArgb(this.a, this.r, this.g, this.b);
                 }
             }
@@ -125,7 +204,7 @@ namespace Evolution_Image
                 get { return g; }
                 set
                 {
-                    this.g = G;
+                    this.g = value;
                     this.color = Color.FromArgb(this.a, this.r, this.g, this.b);
                 }
             }
@@ -136,7 +215,7 @@ namespace Evolution_Image
                 get { return b; }
                 set
                 {
-                    this.b = B;
+                    this.b = value;
                     this.color = Color.FromArgb(this.a, this.r, this.g, this.b);
                 }
             }
@@ -147,16 +226,15 @@ namespace Evolution_Image
                 get { return a; }
                 set
                 {
-                    this.a = A;
+                    this.a = value;
                     this.color = Color.FromArgb(this.a, this.r, this.g, this.b);
                 }
             }
 
             public Color color { get; set; }
 
-            public Triangle(Bitmap Source)
-            {
-                Random rand = new Random();
+            public Triangle(Bitmap Source, Random rand)
+            {                
                 this.pos = new Point[3];
                 this.pos[0] = new Point(rand.Next(0, Source.Width), rand.Next(0, Source.Height));
                 this.pos[1] = new Point(rand.Next(0, Source.Width), rand.Next(0, Source.Height));
@@ -170,5 +248,38 @@ namespace Evolution_Image
 
         }
 
+        public class Individ
+        {
+            public Triangle[] genes { get; set; }
+
+            public int fitness { get; set; }
+
+            public Bitmap evoImage { get; set; }
+
+            public Individ(Bitmap source, int numGenes)
+            {
+                //this.evoImage = new Bitmap(source.Width, source.Height);
+
+                Random rand = new Random();
+
+                this.genes = new Triangle[numGenes];
+
+                Bitmap temp = new Bitmap(source.Width, source.Height);
+
+                for (int i = 0; i < numGenes; i++)
+                {
+                    this.genes[i] = new Triangle(source, rand);
+
+                    using (Graphics g = Graphics.FromImage(temp))
+                    {
+                        SolidBrush drawing_Evo_Brush = new SolidBrush(this.genes[i].color);
+                        g.FillPolygon(drawing_Evo_Brush, this.genes[i].pos);                        
+                    }                                        
+                }
+                this.evoImage = temp;
+                this.fitness = likeness(source, this.evoImage);
+            }
+
+        }
     }
 }

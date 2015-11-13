@@ -16,3 +16,12 @@ C:\Users\jagunder\Documents\GitHubVisualStudio\Evolution_Image\Evolution_Image\o
 C:\Users\jagunder\Documents\GitHubVisualStudio\Evolution_Image\Evolution_Image\obj\Debug\Evolution_Image.Form1.resources
 C:\Users\jagunder\Documents\GitHubVisualStudio\Evolution_Image\Evolution_Image\obj\Debug\Evolution_Image.Properties.Resources.resources
 C:\Users\jagunder\Documents\GitHubVisualStudio\Evolution_Image\Evolution_Image\obj\Debug\Evolution_Image.csproj.GenerateResource.Cache
+C:\Users\Jim-Alexander\Source\Repos\Evolution_Image\Evolution_Image\bin\Debug\Evolution_Image.exe.config
+C:\Users\Jim-Alexander\Source\Repos\Evolution_Image\Evolution_Image\obj\Debug\Evolution_Image.exe
+C:\Users\Jim-Alexander\Source\Repos\Evolution_Image\Evolution_Image\obj\Debug\Evolution_Image.pdb
+C:\Users\Jim-Alexander\Source\Repos\Evolution_Image\Evolution_Image\bin\Debug\Evolution_Image.exe
+C:\Users\Jim-Alexander\Source\Repos\Evolution_Image\Evolution_Image\bin\Debug\Evolution_Image.pdb
+C:\Users\Jim-Alexander\Source\Repos\Evolution_Image\Evolution_Image\obj\Debug\Evolution_Image.csprojResolveAssemblyReference.cache
+C:\Users\Jim-Alexander\Source\Repos\Evolution_Image\Evolution_Image\obj\Debug\Evolution_Image.Form1.resources
+C:\Users\Jim-Alexander\Source\Repos\Evolution_Image\Evolution_Image\obj\Debug\Evolution_Image.Properties.Resources.resources
+C:\Users\Jim-Alexander\Source\Repos\Evolution_Image\Evolution_Image\obj\Debug\Evolution_Image.csproj.GenerateResource.Cache
