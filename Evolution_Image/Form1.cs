@@ -34,8 +34,8 @@ namespace Evolution_Image
             Application.DoEvents();
 
             //initialize Population            
-            int numGenes = 20;
-            int popSize = 20;
+            int numGenes = 15;
+            int popSize = 8;
             Random rand = new Random();
             Individ[] population = new Individ[popSize];            
 
@@ -51,23 +51,20 @@ namespace Evolution_Image
                 return num1.fitness.CompareTo(num2.fitness);
             });
 
-            //Evolving population until best individ fitness meets some value
-            while(population[0].fitness > 5500000)
+            //Evolving population until best individ fitness meets some value 5500000
+            while(population[0].fitness > 55000)
             {
                 //evolving Population
                 population = mate(population, rand);
+
+                //Mutate population
+                population = mutate_Population(population, rand, 3);
 
                 //Sorting Population            
                 Array.Sort(population, delegate (Individ num1, Individ num2)
                 {
                     return num1.fitness.CompareTo(num2.fitness);
-                });
-
-                ////Print population
-                //foreach (Individ i in population)
-                //{
-                //    Genes_Textbox.Text += (i.fitness + Environment.NewLine);
-                //}
+                });                
 
                 //print best image of the generation
 
@@ -107,26 +104,97 @@ namespace Evolution_Image
 
         public static Individ procreation(Individ Parent1, Individ Parent2, Random rand)
         {
-            return Parent1;
+            //initialize a cutoff point where all the genes of parent 1 will be transferred from before the point
+            //and all the genes from parent 2 will be transferred to the kid from after the point
+            int cutoff = rand.Next(0, Parent1.genes.Length);
+
+            //Initialize kid
+            Individ kid = new Individ(Parent1.source, Parent1.genes.Length, rand);
+            Triangle[] kid_Genes = new Triangle[kid.genes.Length];
+
+            for (int i = 0; i < kid.genes.Length; i++)
+            {
+                if (i < cutoff)
+                {
+                    kid_Genes[i] = Parent1.genes[i];
+                }
+                else kid_Genes[i] = Parent2.genes[i];
+            }
+
+            kid.Genes = kid_Genes;
+
+            return kid;
         }
 
         public static Individ[] mate(Individ[] population , Random rand)
         {
             Individ[] temp_Population = new Individ[population.Length];
             //calculate parents
-            int numParents = Convert.ToInt32((population.Length) / 2);
-            int i = 0;
-            for (i = 0; i < numParents; i = i + 2)
+            int numParents = (int) Math.Round((population.Length + 0.0) / 2);
+            
+            for (int i = 0; i < numParents*2; i = i + 2)
             {
                 temp_Population[i] = procreation(population[i], population[i + 1], rand);
                 temp_Population[i + 1] = procreation(population[i], population[i + 1], rand);
             }
-            while (i < population.Length)
-            {
-                temp_Population[i] = new Individ(population[0].evoImage, population[0].genes.Length,rand);
-                i++;
-            }
+            
+            return temp_Population;
+        }        
 
+        public static Individ[] mutate_Population(Individ[] population, Random rand, double mutation)
+        {
+            //initialize temporary population
+            Individ[] temp_Population = population;
+
+            //initialize mutation variables
+            double mutationValue = rand.Next(0, (int)(mutation * 100 + 1)) / 100;
+            int mutateDirection;
+            if (rand.Next(0, 2) == 1) mutateDirection = 1;
+            else mutateDirection = -1;                  
+
+            //Mutate every individual of the population
+            for (int i = 0; i < population.Length; i++)
+            {
+                for(int j = 0; j < population[i].genes.Length; j++)
+                {
+                    //Mutate Color
+                    //change mutate values
+                    mutationValue = rand.Next(0, (int)(mutation * 100 + 1)) / 100;                    
+                    if (rand.Next(0, 2) == 1) mutateDirection = 1;
+                    else mutateDirection = -1;
+                    temp_Population[i].Genes[j].R = Math.Abs((int)(population[i].Genes[j].R +  (mutateDirection * mutationValue)) % 255);
+
+                    mutationValue = rand.Next(0, (int)(mutation * 100 + 1)) / 100;                    
+                    if (rand.Next(0, 2) == 1) mutateDirection = 1;
+                    else mutateDirection = -1;
+                    temp_Population[i].Genes[j].G = Math.Abs((int)(population[i].Genes[j].G + (mutateDirection * mutationValue)) % 255);
+
+                    mutationValue = rand.Next(0, (int)(mutation * 100 + 1)) / 100;                    
+                    if (rand.Next(0, 2) == 1) mutateDirection = 1;
+                    else mutateDirection = -1;
+                    temp_Population[i].Genes[j].B = Math.Abs((int)(population[i].Genes[j].B + (mutateDirection * mutationValue)) % 255);
+
+                    mutationValue = rand.Next(0, (int)(mutation * 100 + 1)) / 100;                    
+                    if (rand.Next(0, 2) == 1) mutateDirection = 1;
+                    else mutateDirection = -1;
+                    temp_Population[i].Genes[j].A = Math.Abs((int)(population[i].Genes[j].A + (mutateDirection * mutationValue)) % 255);
+
+                    //Mutate Points
+                    for (int p = 0; p < population[i].Genes[j].pos.Length; p++)
+                    {
+                        mutationValue = rand.Next(0, (int)(mutation * 100 + 1)) / 100;                        
+                        if (rand.Next(0, 2) == 1) mutateDirection = 1;
+                        else mutateDirection = -1;
+                        temp_Population[i].Genes[j].pos[p].X = Math.Abs((int)(population[i].Genes[j].pos[p].X + (mutateDirection * mutationValue)) % population[i].source.Width);
+
+                        mutationValue = rand.Next(0, (int)(mutation * 100 + 1)) / 100;                        
+                        if (rand.Next(0, 2) == 1) mutateDirection = 1;
+                        else mutateDirection = -1;
+                        temp_Population[i].Genes[j].pos[p].Y = Math.Abs((int)(population[i].Genes[j].pos[p].Y + (mutateDirection * mutationValue)) % population[i].source.Height);
+                    }
+
+                }
+            }
 
             return temp_Population;
         }        
@@ -179,7 +247,8 @@ namespace Evolution_Image
                 }
             }
 
-            public Color color { get; set; }
+            public Color color;          
+
 
             public Triangle(Bitmap Source, Random rand)
             {                
@@ -198,11 +267,33 @@ namespace Evolution_Image
 
         public class Individ
         {
-            public Triangle[] genes { get; set; }
+            public Triangle[] genes;
+            public Triangle[] Genes
+            {
+                get { return genes; }
+                set
+                {                    
+                    Bitmap temp = new Bitmap(this.evoImage.Width, this.evoImage.Height);
+
+                    this.genes = value;
+
+                    for (int i = 0; i < this.genes.Length; i++)
+                    {                       
+                        using (Graphics g = Graphics.FromImage(temp))
+                        {
+                            SolidBrush drawing_Evo_Brush = new SolidBrush(this.genes[i].color);
+                            g.FillPolygon(drawing_Evo_Brush, this.genes[i].pos);
+                        }
+                    }
+                    this.evoImage = temp;
+                    this.fitness = likeness(this.source, this.evoImage);
+                }
+            }
 
             public int fitness { get; set; }
 
             public Bitmap evoImage { get; set; }
+            public Bitmap source { get; set; }
 
             public Individ(Bitmap source, int numGenes, Random randomGen)
             {
@@ -226,6 +317,7 @@ namespace Evolution_Image
                 }
                 this.evoImage = temp;
                 this.fitness = likeness(source, this.evoImage);
+                this.source = source;
             }
 
         }
