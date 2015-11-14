@@ -26,37 +26,60 @@ namespace Evolution_Image
 
         private void button1_Click(object sender, EventArgs e)
         {
+            Application.DoEvents();
             //initialize source image
             Source_Image_Path.ShowDialog();
             Bitmap source_Image = (Bitmap)Image.FromFile(Source_Image_Path.FileName);
             Source_Imagebox.BackgroundImage = source_Image;
+            Application.DoEvents();
 
             //initialize Population            
             int numGenes = 20;
-            int popSize = 5;
-            Individ[] population = new Individ[popSize];
+            int popSize = 20;
+            Random rand = new Random();
+            Individ[] population = new Individ[popSize];            
 
             for (int i = 0; i < popSize; i++)
             {
-                population[i] = new Individ(source_Image, numGenes);
+                population[i] = new Individ(source_Image, numGenes, rand);
             }
-
-            //test testing of Population
-            Graph populationGraph = new Graph(population);
-            while (populationGraph.history[249] > 9000000)
+                       
+            
+            //Sorting initial Population            
+            Array.Sort(population, delegate (Individ num1, Individ num2)
             {
-                for (int i = 0; i < popSize; i++)
+                return num1.fitness.CompareTo(num2.fitness);
+            });
+
+            //Evolving population until best individ fitness meets some value
+            while(population[0].fitness > 5500000)
+            {
+                //evolving Population
+                population = mate(population, rand);
+
+                //Sorting Population            
+                Array.Sort(population, delegate (Individ num1, Individ num2)
                 {
-                    population[i] = new Individ(source_Image, numGenes);
-                }
-                populationGraph.CurrPopulation = population;
-                Evo_Imagebox.BackgroundImage = population[populationGraph.currMaxIndex].evoImage;
-                Genes_Textbox.Text += ("Likeness: " + likeness(source_Image, population[populationGraph.currMaxIndex].evoImage) + Environment.NewLine);
+                    return num1.fitness.CompareTo(num2.fitness);
+                });
+
+                ////Print population
+                //foreach (Individ i in population)
+                //{
+                //    Genes_Textbox.Text += (i.fitness + Environment.NewLine);
+                //}
+
+                //print best image of the generation
+
+                Application.DoEvents();
+                Genes_Textbox.Text += (population[0].fitness + Environment.NewLine);
+                Evo_Imagebox.BackgroundImage = population[0].evoImage;
+                Application.DoEvents();
             }
-            Evo_Imagebox.BackgroundImage = population[populationGraph.currMaxIndex].evoImage;
-            Genes_Textbox.Text += ("Likeness Final: " + likeness(source_Image, population[populationGraph.currMaxIndex].evoImage) + Environment.NewLine);
-
-
+            Application.DoEvents();
+            Genes_Textbox.Text += (population[0].fitness + Environment.NewLine);
+            Evo_Imagebox.BackgroundImage = population[0].evoImage;
+            Application.DoEvents();
         }
 
         public static int likeness(Bitmap source, Bitmap compare)
@@ -80,108 +103,33 @@ namespace Evolution_Image
                 return fitness;
             }
             else return 0;
-        }        
-
-        public class Graph
-        {
-            public Bitmap graph { get; set; }
-
-            public int[] history { get; set; }
-
-            public Individ[] currPopulation;
-            public Individ[] CurrPopulation
-            {                
-                set
-                {
-                    //Find best fitness of the population
-                    int bestFitness = 0;
-                    int bestIndex = 0;
-
-                    for (int i = 0; i < value.Length; i++)
-                    {
-                        if ((value[i].fitness < bestFitness) || (i == 0))
-                        {
-                            bestFitness = value[i].fitness;
-                            bestIndex = i;
-                        }
-                    }
-                    //append best fitness to the history array
-                    for (int i = 0; i < 249; i++)
-                    {
-                        int tempIndex = 249 - i;
-                        history[tempIndex - 1] = history[tempIndex];
-                    }
-                    history[249] = bestFitness;
-
-                    //graph the history array
-                    Bitmap temp = new Bitmap(this.graph);
-                    Point[] graphPoints = new Point[252];
-                    graphPoints[250] = new Point(this.graph.Width, this.graph.Height);
-                    graphPoints[251] = new Point(0, this.graph.Height);
-
-                    for (int i = 0; i < 250; i++)
-                    {
-                        graphPoints[i] = new Point((45 * history[i]) / (history[0] + 1000), i);
-                        using (Graphics g = Graphics.FromImage(temp))
-                        {
-                            SolidBrush drawing_Evo_Brush = new SolidBrush(Color.Red);
-                            g.FillPolygon(drawing_Evo_Brush, graphPoints);
-                        }
-                    }
-                    this.graph = temp;
-                    this.currPopulation = value;
-                    this.currMaxIndex = bestIndex;
-                }
-            }
-
-            public int currMaxIndex { get; set; }
-
-            public Graph(Individ[] population)
-            {
-                //Initialize the history array
-                this.history = new int[250];
-                //Initialize graph bitmap
-                this.graph = new Bitmap(250, 45);
-                //Find best fitness of the population
-                int bestFitness = 0;
-                int bestIndex = 0;
-
-                for (int i = 0; i < population.Length; i++)
-                {
-                    if ((population[i].fitness < bestFitness) || (i == 0))
-                    {
-                        bestFitness = population[i].fitness;
-                        bestIndex = i;
-                    }
-                }
-                //append best fitness to the history array
-                for(int i = 0; i < 249; i++)
-                {
-                    int tempIndex = 249 - i;
-                    history[tempIndex - 1] = history[tempIndex];
-                }
-                history[249] = bestFitness;
-
-                //graph the history array
-                Bitmap temp = new Bitmap(this.graph);
-                Point[] graphPoints = new Point[252];
-                graphPoints[250] = new Point(this.graph.Width, this.graph.Height);
-                graphPoints[251] = new Point(0, this.graph.Height);
-
-                for (int i = 0; i < 250; i++)
-                {
-                    graphPoints[i] = new Point((45*history[i])/(history[0]+1000),i);
-                    using (Graphics g = Graphics.FromImage(temp))
-                    {
-                        SolidBrush drawing_Evo_Brush = new SolidBrush(Color.Red);
-                        g.FillPolygon(drawing_Evo_Brush, graphPoints);
-                    }
-                }
-                this.graph = temp;
-                this.currPopulation = population;
-                this.currMaxIndex = bestIndex;
-            }
         }
+
+        public static Individ procreation(Individ Parent1, Individ Parent2, Random rand)
+        {
+            return Parent1;
+        }
+
+        public static Individ[] mate(Individ[] population , Random rand)
+        {
+            Individ[] temp_Population = new Individ[population.Length];
+            //calculate parents
+            int numParents = Convert.ToInt32((population.Length) / 2);
+            int i = 0;
+            for (i = 0; i < numParents; i = i + 2)
+            {
+                temp_Population[i] = procreation(population[i], population[i + 1], rand);
+                temp_Population[i + 1] = procreation(population[i], population[i + 1], rand);
+            }
+            while (i < population.Length)
+            {
+                temp_Population[i] = new Individ(population[0].evoImage, population[0].genes.Length,rand);
+                i++;
+            }
+
+
+            return temp_Population;
+        }        
 
         public class Triangle
         {
@@ -256,11 +204,11 @@ namespace Evolution_Image
 
             public Bitmap evoImage { get; set; }
 
-            public Individ(Bitmap source, int numGenes)
+            public Individ(Bitmap source, int numGenes, Random randomGen)
             {
                 //this.evoImage = new Bitmap(source.Width, source.Height);
 
-                Random rand = new Random();
+                Random rand = randomGen;
 
                 this.genes = new Triangle[numGenes];
 
