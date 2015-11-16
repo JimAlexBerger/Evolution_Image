@@ -58,7 +58,7 @@ namespace Evolution_Image
                 population = mate(population, rand);
 
                 //Mutate population
-                population = mutate_Population(population, rand, 3);
+                population = mutate_Population(population, rand, 1);
 
                 //Sorting Population            
                 Array.Sort(population, delegate (Individ num1, Individ num2)
@@ -131,11 +131,21 @@ namespace Evolution_Image
             Individ[] temp_Population = new Individ[population.Length];
             //calculate parents
             int numParents = (int) Math.Round((population.Length + 0.0) / 2);
-            
-            for (int i = 0; i < numParents*2; i = i + 2)
+            int parent1;
+            int parent2; 
+
+
+            for (int i = 0; i < population.Length; i++)
             {
-                temp_Population[i] = procreation(population[i], population[i + 1], rand);
-                temp_Population[i + 1] = procreation(population[i], population[i + 1], rand);
+                parent1 = rand.Next(0, numParents);
+                parent2 = parent1;
+
+                while(parent2 == parent1)
+                {
+                    parent2 = rand.Next(0, numParents);
+                }
+
+                temp_Population[i] = procreation(population[parent1], population[parent2], rand);                
             }
             
             return temp_Population;

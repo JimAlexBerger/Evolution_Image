@@ -83,6 +83,7 @@
             // 
             this.Genes_Textbox.Location = new System.Drawing.Point(27, 24);
             this.Genes_Textbox.Name = "Genes_Textbox";
+            this.Genes_Textbox.ReadOnly = true;
             this.Genes_Textbox.Size = new System.Drawing.Size(175, 129);
             this.Genes_Textbox.TabIndex = 3;
             this.Genes_Textbox.Text = "";
