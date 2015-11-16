@@ -34,7 +34,7 @@ namespace Evolution_Image
             Application.DoEvents();
 
             //initialize Population            
-            int numGenes = 15;
+            int numGenes = 2;
             int popSize = 8;
             Random rand = new Random();
             Individ[] population = new Individ[popSize];            
@@ -55,7 +55,7 @@ namespace Evolution_Image
             while(population[0].fitness > 55000)
             {
                 //evolving Population
-                population = mate(population, rand);
+                population = mate(population, rand, 4);
 
                 //Mutate population
                 population = mutate_Population(population, rand, 1);
@@ -126,11 +126,10 @@ namespace Evolution_Image
             return kid;
         }
 
-        public static Individ[] mate(Individ[] population , Random rand)
+        public static Individ[] mate(Individ[] population , Random rand, int numParents)
         {
             Individ[] temp_Population = new Individ[population.Length];
-            //calculate parents
-            int numParents = (int) Math.Round((population.Length + 0.0) / 2);
+            //calculate parents            
             int parent1;
             int parent2; 
 
@@ -151,7 +150,7 @@ namespace Evolution_Image
             return temp_Population;
         }        
 
-        public static Individ[] mutate_Population(Individ[] population, Random rand, double mutation)
+        public static Individ[] mutate_Population(Individ[] population, Random rand, double chance, double amount)
         {
             //initialize temporary population
             Individ[] temp_Population = population;
@@ -246,14 +245,14 @@ namespace Evolution_Image
                 }
             }
 
-            public int a;
+            public int a = 255;
             public int A
             {
                 get { return a; }
                 set
                 {
-                    this.a = value;
-                    this.color = Color.FromArgb(this.a, this.r, this.g, this.b);
+                    //this.a = value;
+                    //this.color = Color.FromArgb(this.a, this.r, this.g, this.b);
                 }
             }
 
@@ -269,7 +268,8 @@ namespace Evolution_Image
                 this.r = rand.Next(0, 256);
                 this.g = rand.Next(0, 256);
                 this.b = rand.Next(0, 256);
-                this.a = rand.Next(0, 256);
+                //this.a = rand.Next(0, 256);
+                this.a = 255;
                 this.color = Color.FromArgb(a, r, g, b);
             }
 
