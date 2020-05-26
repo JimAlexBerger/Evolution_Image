@@ -25,3 +25,15 @@ C:\Users\Jim-Alexander\Source\Repos\Evolution_Image\Evolution_Image\obj\Debug\Ev
 C:\Users\Jim-Alexander\Source\Repos\Evolution_Image\Evolution_Image\obj\Debug\Evolution_Image.Form1.resources
 C:\Users\Jim-Alexander\Source\Repos\Evolution_Image\Evolution_Image\obj\Debug\Evolution_Image.Properties.Resources.resources
 C:\Users\Jim-Alexander\Source\Repos\Evolution_Image\Evolution_Image\obj\Debug\Evolution_Image.csproj.GenerateResource.Cache
+E:\Prosjekter\C#\Evolution_Image\Evolution_Image\bin\Debug\Evolution_Image.exe.config
+E:\Prosjekter\C#\Evolution_Image\Evolution_Image\bin\Debug\Evolution_Image.exe
+E:\Prosjekter\C#\Evolution_Image\Evolution_Image\bin\Debug\Evolution_Image.pdb
+E:\Prosjekter\C#\Evolution_Image\Evolution_Image\obj\Debug\Evolution_Image.csprojAssemblyReference.cache
+E:\Prosjekter\C#\Evolution_Image\Evolution_Image\obj\Debug\Evolution_Image.Form1.resources
+E:\Prosjekter\C#\Evolution_Image\Evolution_Image\obj\Debug\Evolution_Image.Properties.Resources.resources
+E:\Prosjekter\C#\Evolution_Image\Evolution_Image\obj\Debug\Evolution_Image.csproj.GenerateResource.cache
+E:\Prosjekter\C#\Evolution_Image\Evolution_Image\obj\Debug\Evolution_Image.exe
+E:\Prosjekter\C#\Evolution_Image\Evolution_Image\obj\Debug\Evolution_Image.pdb
+E:\Prosjekter\C#\Evolution_Image\Evolution_Image\bin\Debug\GeneticEvolution.dll
+E:\Prosjekter\C#\Evolution_Image\Evolution_Image\bin\Debug\GeneticEvolution.pdb
+E:\Prosjekter\C#\Evolution_Image\Evolution_Image\obj\Debug\Evolution_Image.csproj.CopyComplete

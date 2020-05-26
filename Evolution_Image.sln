@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29728.190
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Evolution_Image", "Evolution_Image\Evolution_Image.csproj", "{EFD4A121-3806-4DC3-B9A5-9B4CA38380FE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeneticEvolution", "GeneticEvolution\GeneticEvolution.csproj", "{655A5F75-2F41-45DD-9608-394784A01158}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,8 +17,15 @@ Global
 		{EFD4A121-3806-4DC3-B9A5-9B4CA38380FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EFD4A121-3806-4DC3-B9A5-9B4CA38380FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EFD4A121-3806-4DC3-B9A5-9B4CA38380FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{655A5F75-2F41-45DD-9608-394784A01158}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{655A5F75-2F41-45DD-9608-394784A01158}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{655A5F75-2F41-45DD-9608-394784A01158}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{655A5F75-2F41-45DD-9608-394784A01158}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {06A126C5-6F11-44AA-851D-30319388DC73}
 	EndGlobalSection
 EndGlobal
